@@ -59,7 +59,8 @@ find_qt() {
         # Windows paths, maybe check for more in the future
         check_path "/c/Qt"
     elif [[ "$PLATFORM" == "linux" ]]; then
-        check_path "$HOME/Qt"
+        #check_path "$HOME/Qt"
+        check_path "/usr/lib/qt6"
     elif [[ "$PLATFORM" == "macos" ]]; then
         check_path "$HOME/Qt"
     fi
@@ -100,8 +101,8 @@ find_cmake() {
 
     # Function to check if a file exists
     check_path() {
-        if [[ -f "$1" ]]; then
-            cmake_path="$1"
+        if [[ -f "$HOME/Qt/usr/lib/qt6/bin/qt-cmake" ]]; then
+            cmake_path="$HOME/Qt/usr/lib/qt6/bin/qt-cmake"
             return 0
         else
             return 1
@@ -152,9 +153,9 @@ find_ninja() {
     local ninja_path=""
 
     if [[ "$PLATFORM" == "windows" ]]; then
-        ninja_path="${QT_TOOLS_PATH}/Ninja/ninja.exe"
+        ninja_path="/usr/bin/ninja"
     else
-        ninja_path="${QT_TOOLS_PATH}/Ninja/ninja"
+        ninja_path="/usr/bin/ninja"
     fi
 
     echo "$ninja_path"
@@ -408,6 +409,7 @@ configure() {
     echo "Using Qt root: $QT_ROOT"
 
     QT_PATH=$(find_qtpath)
+    QT_PATH="$HOME/Qt/usr/lib/qt6"
     if [ ! -d "$QT_PATH" ]; then
         echo "$QT_PATH is not a directory. Aborting."
         exit 1
