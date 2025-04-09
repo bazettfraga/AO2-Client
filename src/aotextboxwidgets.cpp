@@ -131,3 +131,132 @@ void AOChatboxLabel::paintEvent(QPaintEvent *event)
     QLabel::paintEvent(event);
   }
 }
+
+AOChatboxBody::AOChatboxBody(QWidget *parent)
+    : QTextEdit(parent)
+{
+  setBrush(QBrush(Qt::white));
+  setPen(QPen(Qt::black));
+}
+
+void AOChatboxBody::setIsOutlined(bool outlined)
+{
+  m_outline = outlined;
+}
+
+bool AOChatboxBody::pointMode()
+{
+  return m_pointmode;
+}
+
+void AOChatboxBody::setPointMode(bool mode)
+{
+  m_pointmode = mode;
+}
+
+double AOChatboxBody::outlineThickness()
+{
+  if (pointMode())
+  {
+    return m_outline_width * font().pointSize();
+  }
+  else
+    return m_outline_width;
+}
+
+void AOChatboxBody::setOutlineThickness(double w)
+{
+  m_outline_width = w;
+}
+
+void AOChatboxBody::setBrush(QBrush brush)
+{
+  m_brush = brush;
+}
+void AOChatboxBody::setPen(QPen pen)
+{
+  m_pen = pen;
+}
+
+QSize AOChatboxBody::sizeHint()
+{
+  int nrml_w = std::ceil(outlineThickness() * 2);
+  return QTextEdit::sizeHint() + QSize(nrml_w, nrml_w);
+}
+QSize AOChatboxBody::minimumSizeHint()
+{
+  int nrml_w = std::ceil(outlineThickness() * 2);
+  return QTextEdit::minimumSizeHint() + QSize(nrml_w, nrml_w);
+}
+
+void AOChatboxBody::paintEvent(QPaintEvent *event)
+{
+  if (m_outline)
+  {
+    double w = outlineThickness();
+    QRectF rect = this->rect();
+    QFontMetrics metrics = QFontMetrics(this->font());
+    QRect tr = metrics.boundingRect(text()).adjusted(0, 0, w, w);
+    int l_indent;
+    int x;
+    int y;
+
+    if (indent() == -1)
+    {
+      if (frameWidth())
+      {
+        l_indent = (metrics.boundingRect("x").width() + w * 2) / 2;
+      }
+      else
+      {
+        l_indent = w;
+      }
+    }
+    else
+    {
+      l_indent = indent();
+    }
+
+    if (alignment() & Qt::AlignLeft)
+    {
+      x = rect.left() + l_indent - std::min(metrics.leftBearing(text().at(0)), 0);
+    }
+    else if (alignment() & Qt::AlignRight)
+    {
+      x = rect.x() + rect.width() - l_indent - tr.width();
+    }
+    else
+    {
+      x = (rect.width() - tr.width()) / 2;
+    }
+
+    if (alignment() & Qt::AlignTop)
+    {
+      y = rect.top() + l_indent + metrics.ascent();
+    }
+    else if (alignment() & Qt::AlignBottom)
+    {
+      y = rect.y() + rect.height() - l_indent - metrics.descent();
+    }
+    else
+    {
+      y = (rect.height() + metrics.ascent() - metrics.descent()) / 2;
+    }
+
+    m_pen.setWidth(w * 2);
+    QPainterPath path;
+    path.addText(x, y, font(), text());
+
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.strokePath(path, m_pen);
+    if (1 < m_brush.style() && m_brush.style() < 15)
+      painter.fillPath(path, palette().window());
+    painter.fillPath(path, m_brush);
+  }
+  else
+  {
+    // Use the default renderer
+    QTextEdit::paintEvent(event);
+  }
+}
