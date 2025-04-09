@@ -623,7 +623,7 @@ private:
   AOImage *ui_vp_chatbox;
   AOChatboxLabel *ui_vp_showname;
   kal::InterfaceAnimationLayer *ui_vp_chat_arrow;
-  QTextEdit *ui_vp_message;
+  AOChatboxBody *ui_vp_message;
   kal::SplashAnimationLayer *ui_vp_testimony;
   kal::SplashAnimationLayer *ui_vp_wtce;
   kal::EffectAnimationLayer *ui_vp_effect;

@@ -196,30 +196,30 @@ void AOChatboxBody::paintEvent(QPaintEvent *event)
     double w = outlineThickness();
     QRectF rect = this->rect();
     QFontMetrics metrics = QFontMetrics(this->font());
-    QRect tr = metrics.boundingRect(text()).adjusted(0, 0, w, w);
+    QRect tr = metrics.boundingRect(toPlainText()).adjusted(0, 0, w, w);
     int l_indent;
     int x;
     int y;
 
-    if (indent() == -1)
-    {
-      if (frameWidth())
-      {
+   // if (indent() == -1)
+   // {
+   //   if (frameWidth())
+   //   {
         l_indent = (metrics.boundingRect("x").width() + w * 2) / 2;
-      }
-      else
-      {
-        l_indent = w;
-      }
-    }
-    else
-    {
-      l_indent = indent();
-    }
+   //   }
+   //   else
+   //   {
+   //     l_indent = w;
+   //   }
+   // }
+   // else
+   // {
+   //   l_indent = indent();
+   // }
 
     if (alignment() & Qt::AlignLeft)
     {
-      x = rect.left() + l_indent - std::min(metrics.leftBearing(text().at(0)), 0);
+      x = rect.left() + l_indent - std::min(metrics.leftBearing(toPlainText().at(0)), 0);
     }
     else if (alignment() & Qt::AlignRight)
     {
@@ -245,7 +245,7 @@ void AOChatboxBody::paintEvent(QPaintEvent *event)
 
     m_pen.setWidth(w * 2);
     QPainterPath path;
-    path.addText(x, y, font(), text());
+    path.addText(x, y, font(), toPlainText());
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);

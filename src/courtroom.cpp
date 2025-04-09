@@ -1291,7 +1291,7 @@ void Courtroom::set_qfont(QWidget *widget, QString class_name, QFont font, QColo
     ui_vp_showname->setOutlineThickness(outline_width);
   }
     
- if (class_name == "AOChatboxLabel")
+ if (class_name == "AOChatboxBody")
  { // Hopefully now messages are outlined too!
     ui_vp_message->setIsOutlined(outlined);
     ui_vp_message->setBrush(QBrush(f_color));
